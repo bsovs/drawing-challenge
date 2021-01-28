@@ -1,9 +1,8 @@
-import React, {useContext, useEffect} from "react";
+import React from "react";
 import CanvasDraw from "react-canvas-draw";
 import {useWindowSize} from "../../hooks/useWindowSize";
 import LZString from "lz-string";
 import VoteButton from "../buttons/VoteButton";
-import axios from "../../axios/axios-config";
 
 const Vote = props => {
     const size = useWindowSize();

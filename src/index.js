@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
+import {BrowserRouter} from 'react-router-dom';
+import {Provider} from 'react-redux';
+import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
 import thunk from 'redux-thunk';
+import HttpsRedirect from 'react-https-redirect';
 
 import './index.css';
 import Routes from './routes/Routes';
-import registerServiceWorker from './registerServiceWorker';
+import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
 import authReducer from './store/reducers/auth';
 
@@ -23,12 +24,14 @@ const store = createStore(rootReducer, composeEnhancers(
 
 const app = (
     <Provider store={store}>
-      <BrowserRouter>
-        <Routes />
-      </BrowserRouter>
+        <HttpsRedirect>
+            <BrowserRouter>
+                <Routes/>
+            </BrowserRouter>
+        </HttpsRedirect>
     </Provider>
 );
 
-ReactDOM.render( app, document.getElementById( 'root' ) );
-registerServiceWorker();
+ReactDOM.render(app, document.getElementById('root'));
+serviceWorker.register();
 reportWebVitals();

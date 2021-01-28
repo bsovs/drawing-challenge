@@ -28,8 +28,10 @@ function App() {
     });
     const [color, setColor] = useState();
     const [saveableCanvas, setSaveableCanvas] = useState(null);
-    const [auth, setAuth] = useState({uid: 'brando', gameId: '123c'});
+    const [auth, setAuth] = useState({uid: null, gameId: null});
     const [voteIds, setVoteIds] = useState({userOne: null, userTwo: null});
+
+    if(!auth) setAuth({uid: 'brando', gameId: '123c'});
 
     useEffect(() => {
         axios.get('/api/game/' + auth.gameId)

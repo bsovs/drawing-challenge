@@ -16,17 +16,23 @@
     "react-color": "^2.19.3",
     "react-dom": "^17.0.1",
     "react-firebaseui": "^4.1.0",
+    "react-https-redirect": "^1.1.0",
     "react-scripts": "4.0.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^0.2.4",
+    "workbox-build": "^6.0.2",
+    "workbox-cli": "^6.0.2",
+    "workbox-sw": "^6.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && workbox generateSW workbox-config.js",
+    "dev": "serve -s build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "homepage": ".",
   "proxy": "http://localhost:8080",
   "eslintConfig": {
     "extends": [
