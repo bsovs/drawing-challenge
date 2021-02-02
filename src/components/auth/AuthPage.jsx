@@ -1,5 +1,6 @@
 import React from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import {useHistory} from 'react-router-dom';
 import firebase from 'firebase';
 import {connect} from "react-redux";
 import * as actions from "../../store/actions";
@@ -12,22 +13,30 @@ const config = {
 };
 firebase.initializeApp(config);
 
-// Configure FirebaseUI.
-const uiConfig = {
-    signInFlow: 'redirect',
-    signInSuccessUrl: '/app',
-    signInOptions: [
-        {
-            provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-            signInMethod: firebase.auth.EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD,
-            requireDisplayName: true,
-        },
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-    ],
-};
-
 const SignInScreen = props => {
+    const history = useHistory();
+
+    // Configure FirebaseUI.
+    const uiConfig = {
+        signInFlow: 'popup',
+        signInSuccessUrl: '/auth',
+        callbacks: {
+            signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+                props.login();
+                history.push('/');
+            },
+        },
+        signInOptions: [
+            {
+                provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+                signInMethod: firebase.auth.EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD,
+                requireDisplayName: true,
+            },
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+            firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+        ],
+    };
+
     if (props.isAuthenticated) {
         return (
             <div>

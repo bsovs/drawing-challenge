@@ -11,12 +11,16 @@ const initialState = {
     providerData: null,
     accessToken: null,
     error: null,
-    loading: false,
+    loading: true,
     authRedirectPath: '/'
 };
 
 const authStart = (state, action) => {
     return updateObject(state, {error: null, loading: true});
+};
+
+const authEnd = (state, action) => {
+    return updateObject(state, {error: null, loading: false});
 };
 
 const authSuccess = (state, action) => {
@@ -51,6 +55,8 @@ const authLogout = (state, action) => {
         uid: null,
         providerData: null,
         accessToken: null,
+        error: null,
+        loading: false
     });
 };
 
@@ -62,6 +68,8 @@ const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.AUTH_START:
             return authStart(state, action);
+        case actionTypes.AUTH_END:
+            return authEnd(state, action);
         case actionTypes.AUTH_SUCCESS:
             return authSuccess(state, action);
         case actionTypes.AUTH_FAIL:

@@ -1,14 +1,20 @@
 import React, {useEffect, useState} from 'react';
+import {useParams, useLocation, useHistory} from 'react-router-dom';
+import axios from "../axios/axios-config";
 
 import Canvas from "./canvas/Canvas";
 import Controls from "./canvas/Controls";
 
 import './App.css';
-import PlayButton from "./buttons/PlayButton";
-import Vote from "./vote/Vote";
-import axios from "../axios/axios-config";
+import NavBar from "./nav/NavBar";
+import Countdown from "react-countdown";
+import LinearProgressWithLabel from "./loading/LinearProgressWithLabel";
+import LZString from "lz-string";
 
 function App() {
+    const location = useLocation();
+    const history = useHistory();
+    const {game_id} = useParams();
 
     const [controls, setControls] = useState({
         onChange: null,
@@ -26,67 +32,87 @@ function App() {
         immediateLoading: false,
         hideInterface: false
     });
-    const [color, setColor] = useState();
+    const [color, setColor] = useState("#0a0302");
     const [saveableCanvas, setSaveableCanvas] = useState(null);
-    const [auth, setAuth] = useState({uid: null, gameId: null});
-    const [voteIds, setVoteIds] = useState({userOne: null, userTwo: null});
+    const [prompt, setPrompt] = useState(location.state.prompt || null);
 
-    if(!auth) setAuth({uid: 'brando', gameId: '123c'});
+    const timeLimit = 60;
+    const [countdown, setCountdown] = useState(Date.now() + timeLimit * 1000);
 
     useEffect(() => {
-        axios.get('/api/game/' + auth.gameId)
-            .then(response => {
-                console.log(response.data);
-                setVoteIds({
-                    userOne: response.data.users[0].user_id,
-                    userTwo: response.data.users[1].user_id
+        if (!prompt) {
+            axios.get('/profile/' + game_id)
+                .then(response => {
+                    setPrompt(response.data.prompt);
+                })
+                .catch(error => {
+                    console.log(error);
                 });
+        }
+        setCountdown(Date.now() + timeLimit * 1000);
+    }, [game_id]);
+
+    const submitDrawing = (drawingData) => {
+        axios.post('/game/submit-drawing', {
+            game_id: game_id,
+            drawing_data: drawingData
+        })
+            .then(response => {
+                localStorage.setItem(
+                    "savedDrawing",
+                    drawingData
+                );
+                history.push(`/profile/${game_id}`);
             })
             .catch(error => {
                 console.log(error);
             });
-    }, [auth.gameId]);
+    };
+
+    const Completionist = () => <span>You are good to go!</span>;
+    const countdownRenderer = ({minutes, seconds, completed}) => {
+        seconds += 60 * minutes;
+        if (completed) {
+            return <Completionist/>;
+        } else {
+            return (
+                <React.Fragment>
+                    <span>{seconds} seconds</span>
+                    <span style={{width: '50%'}}>
+                    <LinearProgressWithLabel value={100 * (seconds - timeLimit) * (-1) / timeLimit}/>
+                </span>
+                </React.Fragment>
+            );
+        }
+    };
 
     return (
-        <div className="App">
-            <header>
-                <PlayButton
-                    uid={auth.uid}
-                    gameId={auth.gameId}
+        <React.Fragment>
+            <div style={{display: "flex", flexDirection: 'column', alignItems: "center", justifyContent: "center"}}>
+                <h2>Draw: {prompt}</h2>
+                <Countdown
+                    date={countdown}
+                    renderer={countdownRenderer}
+                    onComplete={() => submitDrawing(LZString.compress(saveableCanvas.getSaveData()))}
                 />
+            </div>
 
+            <div style={{display: "flex", alignItems: "top", justifyContent: "center"}}>
                 <Controls
                     controls={controls}
                     setControls={setControls}
                     saveableCanvas={saveableCanvas}
                     setColor={setColor}
                     color={color}
-                    uid={auth.uid}
-                    gameId={auth.gameId}
+                    submitDrawing={submitDrawing}
                 />
-            </header>
-            <main>
                 <Canvas
                     controls={controls}
                     setSaveableCanvas={setSaveableCanvas}
                     color={color}
                 />
-
-                <Vote
-                    gameId={auth.gameId}
-                    uid={auth.uid}
-                    voteId={voteIds.userOne}
-                />
-                <Vote
-                    gameId={auth.gameId}
-                    uid={auth.uid}
-                    voteId={voteIds.userTwo}
-                />
-            </main>
-            <footer>
-                Created by Brandon S.
-            </footer>
-        </div>
+            </div>
+        </React.Fragment>
     );
 }
 

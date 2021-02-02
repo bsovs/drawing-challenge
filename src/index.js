@@ -11,11 +11,13 @@ import Routes from './routes/Routes';
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
 import authReducer from './store/reducers/auth';
+import voteReducer from './store/reducers/vote';
 
 const composeEnhancers = (process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null) || compose;
 
 const rootReducer = combineReducers({
-    auth: authReducer
+    auth: authReducer,
+    vote: voteReducer
 });
 
 const store = createStore(rootReducer, composeEnhancers(

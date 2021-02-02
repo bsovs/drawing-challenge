@@ -1,19 +1,26 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 import axios from "../../axios/axios-config";
+import {withRouter} from "react-router-dom";
 
 const PlayButton = props => {
+    const path = props.gameId && props.private ? 'join' : (props.private ? 'new' : 'play')
 
     const joinGame = () => {
-        axios.post('/api/game/play', {
-            user_id: props.uid,
-            game_id: props.gameId
+        axios.post(`/game/${path}`, {
+            game_id: props.gameId,
+            is_private: props.private
         })
             .then(response => {
-                console.log(response.data);
+                props.history.push({
+                    pathname: '/app/'+response.data._id,
+                    state: {
+                        prompt: response.data.prompt
+                    }
+                });
             })
             .catch(error => {
-                console.log(error);
+                props.setError(error);
             });
     }
 
@@ -22,10 +29,13 @@ const PlayButton = props => {
             <Button variant="contained"
                     color="primary"
                     onClick={joinGame}
+                    className={props.className}
+                    disabled={props.disabled}
+                    style={{margin: "10px"}}
             >
-                Play
+                {props.text || 'Play'}
             </Button>
         </React.Fragment>
     );
 }
-export default PlayButton;
+export default withRouter(PlayButton);

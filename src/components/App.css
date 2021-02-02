@@ -1,10 +1,10 @@
 .App {
   display: grid;
   grid-template: auto 1fr auto / auto 1fr auto;
+  min-height: 100vh;
 }
 
 .App header {
-  padding: 2rem;
   grid-column: 1 / 4;
 }
 
@@ -14,6 +14,7 @@
 
 .App main {
   grid-column: 2 / 3;
+  max-width: 100%;
 }
 
 .App .right-side {
@@ -22,16 +23,28 @@
 
 .App footer {
   grid-column: 1 / 4;
+  display: flex;
+  justify-content: center;
 }
 
 
-.App header .controls {
-  display:flex;
-  align-items: flex-start;
+.controls {
+  display: block;
+  padding: 0 10px;
 }
 
 
-.App header .controls .group {
-  display: inline-block;
-  margin: 10px;
+.group {
+  display: block;
+  padding: 10px;
+  margin: 10px auto;
+}
+
+.profileTable td {
+  text-align: left;
+  padding: 5px 10px;
+}
+.profileTable td:first-child {
+  text-align: right;
+  font-weight: bold;
 }

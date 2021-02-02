@@ -1,26 +1,23 @@
 import React from "react";
-import CanvasDraw from "react-canvas-draw";
-import {useWindowSize} from "../../hooks/useWindowSize";
-import LZString from "lz-string";
 import VoteButton from "../buttons/VoteButton";
+import DisplayCanvas from "../canvas/DisplayCanvas";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const Vote = props => {
-    const size = useWindowSize();
-
+    if (!props.gameId) {
+        return (<CircularProgress/>);
+    }
     return (
         <div>
-            <CanvasDraw
-                disabled
-                hideGrid
-                canvasWidth={size.width/2}
-                canvasHeight={size.width/2}
-                saveData={LZString.decompress(localStorage.getItem("savedDrawing"))}
-            />
-            <VoteButton
-                gameId={props.gameId}
-                voteId={props.voteId}
-                uid={props.uid}
-            />
+            <DisplayCanvas drawing={props.drawing}/>
+            <span style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                <div style={{display: 'flex',  justifyContent: 'center'}}>
+                    <VoteButton
+                        gameId={props.gameId}
+                        voteId={props.voteId}
+                    />
+                </div>
+            </span>
         </div>
     );
 }

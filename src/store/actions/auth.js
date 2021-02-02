@@ -1,9 +1,16 @@
 import * as actionTypes from './actionTypes';
 import firebase from "firebase";
+import axios from "../../axios/axios-config";
 
 export const authStart = () => {
     return {
         type: actionTypes.AUTH_START
+    };
+};
+
+export const authEnd = () => {
+    return {
+        type: actionTypes.AUTH_END
     };
 };
 
@@ -42,7 +49,7 @@ export const auth = () => {
             if (user) {
                 // User is signed in.
                 user.getIdToken()
-                    .then((accessToken) => {
+                    .then(async(accessToken) => {
                         const args = {
                             displayName: user.displayName,
                             email: user.email,
@@ -53,13 +60,23 @@ export const auth = () => {
                             providerData: user.providerData,
                             accessToken: accessToken,
                         };
-                        const expirationDate = new Date(new Date().getTime() + 60 * 1000);
-                        localStorage.setItem('uid', user.uid);
-                        localStorage.setItem('args', JSON.stringify(args));
                         localStorage.setItem('token', accessToken);
-                        localStorage.setItem('expirationDate', expirationDate);
 
-                        dispatch(authSuccess(args));
+                        axios.get('/profile/me')
+                            .then(response => {
+                                const expirationDate = new Date(new Date().getTime() + 60 * 60 * 1000);
+                                localStorage.setItem('uid', user.uid);
+                                localStorage.setItem('args', JSON.stringify(args));
+                                localStorage.setItem('expirationDate', expirationDate);
+
+                                localStorage.setItem('coins', response.data.coins);
+                                localStorage.setItem('gems', response.data.gems);
+
+                                dispatch(authSuccess({...args, coins: response.data.coins, gems: response.data.gems}));
+                            })
+                            .catch(error => {
+                                dispatch(authFail(error));
+                            });
                     })
                     .catch(error => {
                         dispatch(authFail(error));
@@ -77,7 +94,7 @@ export const auth = () => {
 export const checkAuthTimeout = (expirationTime) => {
     return dispatch => {
         setTimeout(() => {
-            dispatch(logout());
+            dispatch(auth());
         }, expirationTime * 1000);
     };
 };
@@ -93,7 +110,10 @@ export const authCheckState = () => {
                 dispatch(auth());
             } else {
                 const args = JSON.parse(localStorage.getItem('args'));
-                dispatch(authSuccess(args));
+                const coins = localStorage.getItem('coins');
+                const gems = localStorage.getItem('gems');
+
+                dispatch(authSuccess({...args, coins: coins, gems: gems}));
                 dispatch(checkAuthTimeout((expirationDate.getTime() - new Date().getTime()) / 1000));
             }
         }

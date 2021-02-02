@@ -6,34 +6,20 @@ import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import axios from "../../axios/axios-config";
 import Button from "@material-ui/core/Button";
+import {useWindowSize} from "../../hooks/useWindowSize";
 
 const Controls = props => {
-
-    const submitDrawing = (drawingData) => {
-        axios.post('/api/game/submit-drawing', {
-            user_id: props.uid,
-            game_id: props.gameId,
-            drawing_data: drawingData
-        })
-            .then(response => {
-                localStorage.setItem(
-                    "savedDrawing",
-                    response.data.users[1].drawing_data
-                );
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
+    const size = useWindowSize();
+    const boxWidth = size.width < 1500 ? size.width / 6 : 300;
 
     return (<div className={"controls"}>
-            <div className={"group"}>
+            <div className={"group"} style={{width: boxWidth}}>
                 <Button
                     onClick={() => {
-                        submitDrawing(LZString.compress(props.saveableCanvas.getSaveData()));
+                        props.submitDrawing(LZString.compress(props.saveableCanvas.getSaveData()));
                     }}
                 >
-                    Save
+                    Submit
                 </Button>
                 <Button
                     onClick={() => {
@@ -52,7 +38,7 @@ const Controls = props => {
             </div>
 
             <div className={"group"}>
-                <Box sx={{width: 300}}>
+                <Box sx={{width: boxWidth}}>
                     <Typography id="discrete-slider-small-steps" gutterBottom>
                         Width
                     </Typography>
@@ -72,7 +58,7 @@ const Controls = props => {
                     />
                 </Box>
 
-                <Box sx={{width: 300}}>
+                <Box sx={{width: boxWidth}}>
                     <Typography id="discrete-slider-small-steps" gutterBottom>
                         Height
                     </Typography>
@@ -92,7 +78,7 @@ const Controls = props => {
                     />
                 </Box>
 
-                <Box sx={{width: 300}}>
+                <Box sx={{width: boxWidth}}>
                     <Typography id="discrete-slider-small-steps" gutterBottom>
                         Brush Radius
                     </Typography>
@@ -111,7 +97,7 @@ const Controls = props => {
                     />
                 </Box>
 
-                <Box sx={{width: 300}}>
+                <Box sx={{width: boxWidth}}>
                     <Typography id="discrete-slider-small-steps" gutterBottom>
                         Lazy Radius
                     </Typography>
@@ -133,6 +119,17 @@ const Controls = props => {
 
             <div className={"group"}>
                 <CirclePicker
+                    width={boxWidth}
+                    colors={[
+                        "#f44336", "#e91e63",
+                        "#9c27b0", "#673ab7",
+                        "#3f51b5", "#2196f3",
+                        "#03a9f4", "#00bcd4",
+                        "#009688", "#795548",
+                        "#8bc34a", "#cddc39",
+                        "#ffeb3b", "#ffc107",
+                        "#ff9800", "#ff5722",
+                        "#0a0302", "#ffffff"]}
                     color={props.color}
                     onChangeComplete={(color) => props.setColor(color.hex)}
                 />

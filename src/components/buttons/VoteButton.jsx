@@ -1,32 +1,35 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 import axios from "../../axios/axios-config";
+import * as actions from "../../store/actions";
+import {withRouter} from "react-router-dom";
+import {connect} from "react-redux";
 
 const VoteButton = props => {
-
-    const vote = () => {
-        axios.post('/api/game/vote', {
-            user_id: props.uid,
-            game_id: props.gameId,
-            vote_id: props.voteId,
-        })
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
 
     return (
         <React.Fragment>
             <Button variant="contained"
                     color="primary"
-                    onClick={vote}
+                    onClick={() => props.vote({gameId: (props.gameId || props._gameId), voteId: props.voteId})}
             >
                 Vote
             </Button>
         </React.Fragment>
     );
 }
-export default VoteButton;
+
+const mapStateToProps = state => {
+    return {
+        _gameId: state.vote.gameId,
+        clicked: state.vote.clicked,
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        vote: (props) => dispatch(actions.voted(props))
+    };
+};
+
+export default  withRouter(connect(mapStateToProps, mapDispatchToProps)(VoteButton));
