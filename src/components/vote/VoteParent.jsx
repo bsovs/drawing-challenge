@@ -5,12 +5,28 @@ import Vote from "./Vote";
 import axios from "../../axios/axios-config";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
+import styled, {keyframes} from "styled-components";
+import {bounce, headShake} from 'react-animations';
+import Prompt from "./Prompt";
+
+const BounceAnimation = keyframes`${bounce}`;
+const BounceDiv = styled.div`
+  animation: 3s ${BounceAnimation};
+`;
+const HeadShakeAnimation = keyframes`${headShake}`;
+const HeadShakeDiv = styled.div`
+  animation: 3s ${HeadShakeAnimation};
+`;
+
 function VoteParent(props) {
     const [voteIds, setVoteIds] = useState({userOne: null, userTwo: null});
     const [drawings, setDrawings] = useState({userOne: null, userTwo: null});
     const [prompt, setPrompt] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const [slideIn, setSlideIn] = useState(true);
+    const [slideOut, setSlideOut] = useState(false);
 
     useEffect(() => {
         if (props.gameId) {
@@ -31,7 +47,8 @@ function VoteParent(props) {
                 .catch(error => {
                     console.log(error.response);
                     setError(error.response?.data?.message || 'Error Loading Page :(');
-                });
+                })
+                .finally(() => setSlideIn(true))
         }
     }, [props.gameId]);
 
@@ -45,14 +62,13 @@ function VoteParent(props) {
 
     return (<React.Fragment>
             {props.gameId && (
-                <span style={{textAlign: 'center'}}>
-                                <h2>DRAW THIS</h2>
-                                <h3>{prompt || (<CircularProgress/>)}</h3>
-                            </span>
+                <Prompt
+                    prompt={prompt}
+                />
             )
             }
             {(props.gameId && !loading) ?
-                (
+                (<BounceDiv>
                     <span style={{
                         display: 'flex',
                         justifyContent: 'center',
@@ -69,11 +85,11 @@ function VoteParent(props) {
                             voteId={voteIds.userTwo}
                             drawing={drawings.userTwo}
                         />
-                        </span>
-                )
-                : (
+                    </span>
+                </BounceDiv>)
+                : (<HeadShakeDiv>
                     <h2 style={{textAlign: 'center'}}>VOTING QUEUE EMPTY. COME BACK LATER!</h2>
-                )
+                </HeadShakeDiv>)
             }
         </React.Fragment>
     );

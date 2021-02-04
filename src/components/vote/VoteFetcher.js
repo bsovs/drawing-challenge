@@ -3,7 +3,6 @@ import React, {useEffect, useState} from 'react';
 import '../App.css';
 import axios from "../../axios/axios-config";
 import {useParams, withRouter} from "react-router-dom";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import VoteParent from "./VoteParent";
 import * as actions from "../../store/actions";
 import {connect} from "react-redux";
@@ -14,7 +13,7 @@ function VoteFetcher(props) {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [reQueue, setRequeue] = useState(true);
-    const { game_id } = useParams();
+    const {game_id} = useParams();
 
     useEffect(() => {
         if (game_id) {
@@ -64,9 +63,11 @@ function VoteFetcher(props) {
     }
 
     return (
-        <VoteParent
-            gameId={props.gameId}
-        />
+        <div style={{overflow: 'hidden'}}>
+            <VoteParent
+                gameId={props.gameId}
+            />
+        </div>
     );
 }
 
@@ -83,4 +84,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default  withRouter(connect(mapStateToProps, mapDispatchToProps)(VoteFetcher));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(VoteFetcher));

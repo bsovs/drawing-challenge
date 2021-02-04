@@ -5,6 +5,7 @@ import NavBar from "../nav/NavBar";
 import {useHistory, useParams} from "react-router-dom";
 import {connect} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
+import Clipboard from "../buttons/Clipboard";
 
 const useStyles = makeStyles((theme) => ({}));
 
@@ -29,7 +30,11 @@ function Profile(props) {
                 </tr>
                 <tr>
                     <td>ID</td>
-                    <td>{props.uid}</td>
+                    <td>
+                        <Clipboard
+                            copy={props.uid}
+                        />
+                    </td>
                 </tr>
                 <tr>
                     <td>Phone #</td>

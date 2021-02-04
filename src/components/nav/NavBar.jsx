@@ -33,7 +33,8 @@ const NavBar = props => {
     const login = () => history.push('/auth');
     const profile = () => history.push('/profile');
     const home = () => history.push('/');
-    const vote = () => history.push('/vote')
+    const vote = () => history.push('/vote');
+    const myGames = () => history.push('/profile/games')
 
     return (
         <div className={classes.root}>
@@ -59,6 +60,13 @@ const NavBar = props => {
                                         variant="contained"
                                         onClick={vote}>
                                     VOTE
+                                </Button>
+                            </Typography>
+                            <Typography variant="h6" className={classes.display} component="div">
+                                <Button color="primary"
+                                        variant="contained"
+                                        onClick={myGames}>
+                                    MY GAMES
                                 </Button>
                             </Typography>
                             <Typography variant="h6" className={classes.display} component="div">

@@ -5,6 +5,7 @@ import firebase from 'firebase';
 import {connect} from "react-redux";
 import * as actions from "../../store/actions";
 import Button from "@material-ui/core/Button";
+import {authStart} from "../../store/actions";
 
 // Configure Firebase.
 const config = {
@@ -23,6 +24,7 @@ const SignInScreen = props => {
         callbacks: {
             signInSuccessWithAuthResult: function(authResult, redirectUrl) {
                 props.login();
+                props.authStart();
                 history.push('/');
             },
         },
@@ -67,7 +69,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         login: () => dispatch(actions.auth()),
-        logout: () => dispatch(actions.logout())
+        logout: () => dispatch(actions.logout()),
+        authStart: () => dispatch(actions.authStart())
     };
 };
 

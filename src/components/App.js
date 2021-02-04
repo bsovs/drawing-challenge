@@ -62,6 +62,7 @@ function App() {
                     "savedDrawing",
                     drawingData
                 );
+                console.log(LZString.decompressFromUTF16(drawingData));
                 history.push(`/profile/${game_id}`);
             })
             .catch(error => {
@@ -93,7 +94,7 @@ function App() {
                 <Countdown
                     date={countdown}
                     renderer={countdownRenderer}
-                    onComplete={() => submitDrawing(LZString.compress(saveableCanvas.getSaveData()))}
+                    onComplete={() => submitDrawing(LZString.compressToUTF16(saveableCanvas.getSaveData()))}
                 />
             </div>
 

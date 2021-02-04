@@ -16,7 +16,7 @@ const Controls = props => {
             <div className={"group"} style={{width: boxWidth}}>
                 <Button
                     onClick={() => {
-                        props.submitDrawing(LZString.compress(props.saveableCanvas.getSaveData()));
+                        props.submitDrawing(LZString.compressToUTF16(props.saveableCanvas.getSaveData()));
                     }}
                 >
                     Submit

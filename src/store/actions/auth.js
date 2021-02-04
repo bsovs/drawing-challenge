@@ -28,23 +28,26 @@ export const authFail = (error) => {
     };
 };
 
-export const logout = () => {
-    firebase.auth().signOut()
-        .then(() => {
-            localStorage.removeItem('uid');
-            localStorage.removeItem('args');
-            localStorage.removeItem('token');
-            localStorage.removeItem('expirationDate');
-        })
-        .catch(error => console.log(error));
-    return {
-        type: actionTypes.AUTH_LOGOUT
-    };
+export const logout = (actions) => {
+    return dispatch => {
+        firebase.auth().signOut()
+            .then(() => {
+                localStorage.removeItem('uid');
+                localStorage.removeItem('args');
+                localStorage.removeItem('token');
+                localStorage.removeItem('expirationDate');
+            })
+            .catch(error => console.log(error))
+            .finally(() => {
+                dispatch({
+                    type: actionTypes.AUTH_LOGOUT
+                });
+            });
+    }
 };
 
 export const auth = () => {
     return dispatch => {
-        dispatch(authStart());
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 // User is signed in.
@@ -60,11 +63,12 @@ export const auth = () => {
                             providerData: user.providerData,
                             accessToken: accessToken,
                         };
-                        localStorage.setItem('token', accessToken);
 
-                        axios.get('/profile/me')
+                        axios.get('/profile/me', {headers: {Authorization: `Bearer ${accessToken}`}})
                             .then(response => {
                                 const expirationDate = new Date(new Date().getTime() + 60 * 60 * 1000);
+                                localStorage.setItem('token', accessToken);
+
                                 localStorage.setItem('uid', user.uid);
                                 localStorage.setItem('args', JSON.stringify(args));
                                 localStorage.setItem('expirationDate', expirationDate);
@@ -73,6 +77,7 @@ export const auth = () => {
                                 localStorage.setItem('gems', response.data.gems);
 
                                 dispatch(authSuccess({...args, coins: response.data.coins, gems: response.data.gems}));
+                                dispatch(authCheckState());
                             })
                             .catch(error => {
                                 dispatch(authFail(error));
@@ -94,7 +99,7 @@ export const auth = () => {
 export const checkAuthTimeout = (expirationTime) => {
     return dispatch => {
         setTimeout(() => {
-            dispatch(auth());
+            dispatch(authCheckState());
         }, expirationTime * 1000);
     };
 };

@@ -16,7 +16,7 @@ const DisplayCanvas = props => {
             style={{border: "1px dashed #ccc", margin: "20px 0"}}
             canvasWidth={width / 2}
             canvasHeight={height / 2}
-            saveData={LZString.decompress(props.drawing)}
+            saveData={LZString.decompressFromUTF16(props.drawing)}
         />
     );
 }

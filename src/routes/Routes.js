@@ -9,6 +9,8 @@ import Home from "../components/home/Home";
 import Profile from "../components/profile/Profile";
 import VoteFetcher from "../components/vote/VoteFetcher";
 import NavBar from "../components/nav/NavBar";
+import MyGames from "../components/profile/MyGames";
+import HowToPlay from "../components/howto/HowtoPlay";
 
 class Routes extends Component {
     state = {}
@@ -26,7 +28,7 @@ class Routes extends Component {
             </Switch>
         );
 
-        if (this.props.loading) {
+        if (this.props.loading && this.props.match?.path !== '/app') {
             routes = (<Route path="/" component={Loading}/>);
         } else if (this.props.error) {
             routes = (
@@ -47,8 +49,9 @@ class Routes extends Component {
                     <Route path="/app/:game_id" component={App}/>
                     <Route path="/vote/:game_id?" component={VoteFetcher}/>
                     <Route path="/auth" component={Auth}/>
-                    <Route path="/profile" component={Profile}/>
-                    <Route path="/profile/:gameId" component={Profile}/>
+                    <Route exact path="/profile" component={Profile}/>
+                    <Route path="/profile/games/:gameId?" component={MyGames}/>
+                    <Route path="/how-to-play" component={HowToPlay}/>
                     <Redirect to="/"/>
                 </Switch>
             );
@@ -63,7 +66,7 @@ class Routes extends Component {
                     {routes}
                 </main>
                 <footer>
-                    Drawing Challenge is not responsible for any drawings created and/or posted.
+                    Disclaimer: Drawing Challenge is not responsible for any drawings created and/or posted. © Drawing Challenge 2021
                 </footer>
             </div>
         );
