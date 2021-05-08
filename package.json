@@ -14,22 +14,28 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
+    "diff": "^5.0.0",
     "firebase": "^8.2.4",
+    "lodash": "^4.17.20",
     "lz-string": "^1.4.4",
     "react": "^17.0.1",
     "react-animations": "^1.0.0",
-    "react-canvas-draw": "^1.1.1",
-    "react-color": "^2.19.3",
+    "react-canvas-draw-io": "^1.1.2",
+    "react-color": "^2.17.3",
     "react-copy-to-clipboard": "^5.0.3",
     "react-countdown": "^2.3.1",
     "react-dom": "^17.0.1",
     "react-firebaseui": "^4.1.0",
     "react-https-redirect": "^1.1.0",
+    "react-joyride": "^2.3.0",
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "react-sketch-canvas": "^5.3.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0",
     "styled-components": "^5.2.1",
     "web-vitals": "^0.2.4",
     "workbox-build": "^6.0.2",
@@ -38,12 +44,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && workbox generateSW workbox-config.js",
+    "build": "react-scripts build",
     "dev": "serve -s build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "homepage": ".",
+  "homepage": "",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -63,6 +69,7 @@
     ]
   },
   "devDependencies": {
+    "csv-parser": "^3.0.0",
     "prop-types": "^15.7.2"
   }
 }

@@ -27,12 +27,17 @@
   justify-content: center;
 }
 
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 .controls {
   display: block;
   padding: 0 10px;
 }
-
 
 .group {
   display: block;

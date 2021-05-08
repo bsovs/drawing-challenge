@@ -11,6 +11,8 @@ import VoteFetcher from "../components/vote/VoteFetcher";
 import NavBar from "../components/nav/NavBar";
 import MyGames from "../components/profile/MyGames";
 import HowToPlay from "../components/howto/HowtoPlay";
+import CreatDrawings from "../components/admin/CreateDrawings";
+import Guesser from "../components/guesser/Guesser";
 
 class Routes extends Component {
     state = {}
@@ -24,6 +26,8 @@ class Routes extends Component {
             <Switch>
                 <Route exact path="/" component={Home}/>
                 <Route path="/auth" component={Auth}/>
+                <Route exact path="/how-to-play" component={HowToPlay}/>
+                <Route path="/guess-it/:room_id" component={Guesser}/>
                 <Redirect to="/auth"/>
             </Switch>
         );
@@ -50,8 +54,10 @@ class Routes extends Component {
                     <Route path="/vote/:game_id?" component={VoteFetcher}/>
                     <Route path="/auth" component={Auth}/>
                     <Route exact path="/profile" component={Profile}/>
-                    <Route path="/profile/games/:gameId?" component={MyGames}/>
-                    <Route path="/how-to-play" component={HowToPlay}/>
+                    <Route path="/profile/games/:game_id?" component={MyGames}/>
+                    <Route exact path="/how-to-play" component={HowToPlay}/>
+                    <Route path="/admin/draw" component={CreatDrawings}/>
+                    <Route path="/guess-it/:room_id" component={Guesser}/>
                     <Redirect to="/"/>
                 </Switch>
             );

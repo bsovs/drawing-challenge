@@ -52,7 +52,7 @@ export const auth = () => {
             if (user) {
                 // User is signed in.
                 user.getIdToken()
-                    .then(async(accessToken) => {
+                    .then(async (accessToken) => {
                         const args = {
                             displayName: user.displayName,
                             email: user.email,
@@ -64,7 +64,9 @@ export const auth = () => {
                             accessToken: accessToken,
                         };
 
-                        axios.get('/profile/me', {headers: {Authorization: `Bearer ${accessToken}`}})
+                        axios.post('/profile/me',
+                             {display_name: args.displayName},
+                            {headers: {Authorization: `Bearer ${accessToken}`}})
                             .then(response => {
                                 const expirationDate = new Date(new Date().getTime() + 60 * 60 * 1000);
                                 localStorage.setItem('token', accessToken);

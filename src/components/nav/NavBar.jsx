@@ -3,7 +3,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import PlayButton from "../buttons/PlayButton";
 import React from "react";
 import {withRouter, useHistory} from "react-router-dom";
 import {connect} from "react-redux";
@@ -11,6 +10,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import * as actions from "../../store/actions";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCoins, faGem, faHome, faHouseUser} from "@fortawesome/free-solid-svg-icons";
+import logo from "../../resources/drawing.svg";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,7 +34,64 @@ const NavBar = props => {
     const profile = () => history.push('/profile');
     const home = () => history.push('/');
     const vote = () => history.push('/vote');
-    const myGames = () => history.push('/profile/games')
+    const myGames = () => history.push('/profile/games');
+
+    const howToPlay = (
+        <div style={{display: "flex", alignItems: "center", justifyContent: "center", margin: "10px"}}>
+            <Button color="primary"
+                    variant="contained"
+                    onClick={() => history.push('/how-to-play')}>
+                How to play ?
+            </Button>
+        </div>
+    );
+
+    const authButtons = (
+        <React.Fragment>
+            <Typography variant="h6" className={classes.display} component="div">
+                <Button color="primary"
+                        variant="contained"
+                        onClick={vote}>
+                    VOTE
+                </Button>
+            </Typography>
+            <Typography variant="h6" className={classes.display} component="div">
+                <Button color="primary"
+                        variant="contained"
+                        onClick={myGames}>
+                    MY GAMES
+                </Button>
+            </Typography>
+            <Typography variant="h6" className={classes.display} component="div">
+                Coins: {props.coins || 0}
+                <FontAwesomeIcon icon={faCoins} size="" fixedWidth fixedHeight color={'#FFD700'}/>
+            </Typography>
+            <Typography variant="h6" className={classes.display} component="div">
+                Gems: {props.gems || 0}
+                <FontAwesomeIcon icon={faGem} size="" fixedWidth fixedHeight color={'#ed58fc'}/>
+            </Typography>
+        </React.Fragment>
+    );
+
+    const profileButtons = (
+        <React.Fragment>
+            <Typography variant="h6" className={classes.display} component="div">
+                Welcome, {props.displayName}
+            </Typography>
+            <Typography variant="h6" className={classes.display} component="div">
+                <IconButton
+                    edge="start"
+                    className={classes.menuButton}
+                    color="inherit"
+                    aria-label="menu"
+                    onClick={profile}
+                >
+                    <FontAwesomeIcon icon={faHouseUser} size="" fixedWidth fixedHeight
+                                     color={'#3f51b5'}/>
+                </IconButton>
+            </Typography>
+        </React.Fragment>
+    );
 
     return (
         <div className={classes.root}>
@@ -49,64 +106,23 @@ const NavBar = props => {
                             aria-label="menu"
                             onClick={home}
                         >
-                            <FontAwesomeIcon icon={faHome} size="sm" fixedWidth fixedHeight color={'#000'}/>
+                            <img src={logo} width={48} height={48}/>
                         </IconButton>
                     </Typography>
 
-                    {props.isAuthenticated && (
-                        <React.Fragment>
-                            <Typography variant="h6" className={classes.display} component="div">
-                                <Button color="primary"
-                                        variant="contained"
-                                        onClick={vote}>
-                                    VOTE
-                                </Button>
-                            </Typography>
-                            <Typography variant="h6" className={classes.display} component="div">
-                                <Button color="primary"
-                                        variant="contained"
-                                        onClick={myGames}>
-                                    MY GAMES
-                                </Button>
-                            </Typography>
-                            <Typography variant="h6" className={classes.display} component="div">
-                                Coins: {props.coins || 0}
-                                <FontAwesomeIcon icon={faCoins} size="" fixedWidth fixedHeight color={'#FFD700'}/>
-                            </Typography>
-                            <Typography variant="h6" className={classes.display} component="div">
-                                Gems: {props.gems || 0}
-                                <FontAwesomeIcon icon={faGem} size="" fixedWidth fixedHeight color={'#ed58fc'}/>
-                            </Typography>
-                        </React.Fragment>
-                    )}
+                    {props.isAuthenticated && authButtons}
 
-                    <Typography variant="h6" className={classes.title} component="div">
+                    {!props.isAuthenticated && howToPlay}
 
+                    <Typography variant="h4" className={classes.title} component="div" style={{textAlign: 'center'}}>
+                        {!props.isAuthenticated && 'Welcome to Drawing Challenge!'}
                     </Typography>
 
-                    {props.isAuthenticated && (
-                        <React.Fragment>
-                            <Typography variant="h6" className={classes.display} component="div">
-                                Welcome, {props.displayName}
-                            </Typography>
-                            <Typography variant="h6" className={classes.display} component="div">
-                                <IconButton
-                                    edge="start"
-                                    className={classes.menuButton}
-                                    color="inherit"
-                                    aria-label="menu"
-                                    onClick={profile}
-                                >
-                                    <FontAwesomeIcon icon={faHouseUser} size="" fixedWidth fixedHeight
-                                                     color={'#3f51b5'}/>
-                                </IconButton>
-                            </Typography>
-                        </React.Fragment>
-                    )}
+                    {props.isAuthenticated && profileButtons}
                     <Button color="primary"
                             variant="contained"
                             onClick={props.isAuthenticated ? props.logout : login}>
-                        {props.isAuthenticated ? 'Logout' : 'Login'}
+                        {props.isAuthenticated ? 'Logout' : 'Login / Signup'}
                     </Button>
 
                 </Toolbar>

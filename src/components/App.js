@@ -62,8 +62,7 @@ function App() {
                     "savedDrawing",
                     drawingData
                 );
-                console.log(LZString.decompressFromUTF16(drawingData));
-                history.push(`/profile/${game_id}`);
+                history.push(`/profile/games/${game_id}`);
             })
             .catch(error => {
                 console.log(error);

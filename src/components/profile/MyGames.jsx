@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
 
 import '../App.css';
-import {useHistory, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {connect} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
-import {CopyToClipboard} from 'react-copy-to-clipboard';
 import axios from "../../axios/axios-config";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -14,9 +13,6 @@ import Modal from "@material-ui/core/Modal";
 import Prompt from "../vote/Prompt";
 import DisplayCanvas from "../canvas/DisplayCanvas";
 import Loading from "../loading/Loading";
-import {faCopy} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import IconButton from "@material-ui/core/IconButton";
 import Clipboard from "../buttons/Clipboard";
 
 function getModalStyle() {
@@ -37,8 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function MyGames(props) {
-    const history = useHistory();
+function MyGames() {
     const classes = useStyles();
     const {game_id} = useParams();
 
@@ -81,6 +76,13 @@ function MyGames(props) {
                 setLoading(false);
             });
     }, []);
+
+    useEffect(() => {
+        const game = games.find(game => game._id === game_id);
+        if (game) {
+            handleOpen(game);
+        }
+    }, [games]);
 
     if (loading) {
         return (<Loading/>);
